@@ -1,0 +1,263 @@
+<!-- pages/identify/identify.wxml -->
+
+<view class="container">
+
+
+<!-- 标题 -->
+
+<view class="title">
+  发现了什么？
+</view>
+
+<view class="subtitle">
+  拍下你看到的野生动物，让 AI 帮你认识它
+</view>
+
+
+
+<!-- 图片上传 -->
+
+<view
+  class="upload-box"
+  bindtap="chooseImage"
+>
+
+  <image
+    wx:if="{{imagePath}}"
+    src="{{imagePath}}"
+    mode="aspectFill"
+    class="preview-image"
+  />
+
+
+  <view
+    wx:else
+    class="upload-placeholder"
+  >
+
+    <view class="camera">
+      📷
+    </view>
+
+    <view>
+      拍照或上传图片
+    </view>
+
+  </view>
+
+</view>
+
+
+
+<!-- 开始识别 -->
+
+<button
+  class="identify-button"
+  bindtap="identifyAnimal"
+>
+  开始识别
+</button>
+
+
+
+<!-- ========================= -->
+<!-- AI 识别结果 -->
+<!-- ========================= -->
+
+<view
+  wx:if="{{result}}"
+  class="result-card"
+>
+
+  <view class="new-tag">
+    🤖 AI 识别结果
+  </view>
+
+
+  <view class="species-name">
+    {{result.chineseName}}
+  </view>
+
+
+  <view class="scientific-name">
+    {{result.scientificName}}
+  </view>
+
+
+  <view class="confidence">
+    AI 识别可信度：{{result.confidence}}%
+  </view>
+
+
+  <view class="description">
+    {{result.description}}
+  </view>
+
+
+
+  <!-- ========================= -->
+  <!-- 尚未确认 -->
+  <!-- ========================= -->
+
+  <view
+    wx:if="{{!confirmedSpecies && !showSpeciesSelector}}"
+    class="confirm-area"
+  >
+
+    <view class="confirm-title">
+      这个识别结果正确吗？
+    </view>
+
+
+    <button
+      class="confirm-button"
+      bindtap="confirmAIResult"
+    >
+      ✓ 是的，这是{{result.chineseName}}
+    </button>
+
+
+    <button
+      class="correction-button"
+      bindtap="showCorrectionList"
+    >
+      识别不准确
+    </button>
+
+  </view>
+
+
+
+  <!-- ========================= -->
+  <!-- 物种纠错列表 -->
+  <!-- ========================= -->
+
+  <view
+    wx:if="{{showSpeciesSelector}}"
+    class="species-selector"
+  >
+
+    <view class="selector-title">
+      请选择你实际观察到的物种
+    </view>
+
+
+    <view class="selector-tip">
+      你的选择将作为本次观察的最终物种记录
+    </view>
+
+
+    <view class="species-grid">
+
+      <view
+        wx:for="{{speciesList}}"
+        wx:key="id"
+        class="species-option"
+        data-name="{{item.name}}"
+        bindtap="selectSpecies"
+      >
+
+        <view class="option-emoji">
+          {{item.emoji || '🌿'}}
+        </view>
+
+
+        <view class="option-text">
+
+          <view class="option-name">
+            {{item.name}}
+          </view>
+
+
+          <view class="option-scientific">
+            {{item.scientificName}}
+          </view>
+
+        </view>
+
+      </view>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- ========================= -->
+  <!-- 最终确认结果 -->
+  <!-- ========================= -->
+
+  <view
+    wx:if="{{confirmedSpecies}}"
+    class="confirmed-card"
+  >
+
+    <view class="confirmed-label">
+      ✓ 最终确认物种
+    </view>
+
+
+    <view class="confirmed-name">
+      {{confirmedSpecies.name}}
+    </view>
+
+
+    <view class="confirmed-scientific">
+      {{confirmedSpecies.scientificName}}
+    </view>
+
+
+
+    <!-- 用户纠正过 -->
+
+    <view
+      wx:if="{{confirmedSpecies.name != result.chineseName}}"
+      class="corrected-tip"
+    >
+      AI 原始识别结果为「{{result.chineseName}}」，
+      你已将本次观察纠正为「{{confirmedSpecies.name}}」。
+    </view>
+
+
+
+    <!-- AI 正确 -->
+
+    <view
+      wx:else
+      class="correct-tip"
+    >
+      你已确认 AI 识别结果正确。
+    </view>
+
+
+
+    <button
+      class="change-button"
+      bindtap="changeConfirmedSpecies"
+    >
+      修改物种
+    </button>
+
+
+    <button
+      class="save-button"
+      bindtap="saveObservation"
+    >
+      保存观察记录
+    </button>
+
+
+    <button
+      class="detail-button"
+      bindtap="goToSpeciesDetail"
+    >
+      查看{{confirmedSpecies.name}}物种详情
+    </button>
+
+  </view>
+
+
+</view>
+
+
+</view>

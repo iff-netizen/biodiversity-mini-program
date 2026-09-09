@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+miniprogram_npm/
+
+# 本地私密配置，不上传 GitHub
+config/config.js

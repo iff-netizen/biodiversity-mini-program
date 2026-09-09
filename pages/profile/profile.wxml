@@ -1,0 +1,195 @@
+<view class="container">
+
+
+<!-- 用户档案 -->
+<view class="profile-header">
+
+  <view class="avatar">
+    🌿
+  </view>
+
+  <view class="username">
+    自然观察者
+  </view>
+
+  <view class="level">
+    Lv.{{level}} · {{levelName}}
+  </view>
+
+</view>
+
+
+
+<!-- 数据统计 -->
+<view class="stats-card">
+
+  <view class="stat-item">
+
+    <view class="stat-number">
+      {{observationCount}}
+    </view>
+
+    <view class="stat-label">
+      观察记录
+    </view>
+
+  </view>
+
+
+  <view class="stat-divider"></view>
+
+
+  <view class="stat-item">
+
+    <view class="stat-number">
+      {{speciesCount}}
+    </view>
+
+    <view class="stat-label">
+      发现物种
+    </view>
+
+  </view>
+
+
+  <view class="stat-divider"></view>
+
+
+  <view class="stat-item">
+
+    <view class="stat-number">
+      {{contributionCount}}
+    </view>
+
+    <view class="stat-label">
+      有效贡献
+    </view>
+
+  </view>
+
+</view>
+
+
+
+<!-- 图鉴进度 -->
+<view class="section-card">
+
+  <view class="section-header">
+
+    <view class="section-title">
+      我的图鉴
+    </view>
+
+    <view
+      class="more"
+      bindtap="goToCollection"
+    >
+      查看全部 ›
+    </view>
+
+  </view>
+
+
+  <view class="progress-info">
+
+    <text>
+      已发现 {{speciesCount}} / {{totalSpecies}}
+    </text>
+
+    <text>
+      {{progressPercent}}%
+    </text>
+
+  </view>
+
+
+  <view class="progress-background">
+
+    <view
+      class="progress-bar"
+      style="width: {{progressWidth}}"
+    ></view>
+
+  </view>
+
+</view>
+
+
+
+<!-- 最近观察标题 -->
+<view class="section-title outside-title">
+  最近观察
+</view>
+
+
+
+<!-- 有观察记录 -->
+<block wx:if="{{recentObservations.length > 0}}">
+
+  <view
+    wx:for="{{recentObservations}}"
+    wx:key="id"
+    class="observation-card"
+    data-id="{{item.id}}"
+    bindtap="goToObservationDetail"
+  >
+
+    <view class="observation-icon">
+      {{item.emoji}}
+    </view>
+
+
+    <view class="observation-info">
+
+      <view class="observation-name">
+        {{item.speciesName}}
+      </view>
+
+      <view class="observation-scientific">
+        {{item.scientificName}}
+      </view>
+
+      <view class="observation-meta">
+        📍 {{item.locationName || '观察地点'}}
+      </view>
+
+      <view class="observation-time">
+        {{item.time}}
+      </view>
+
+    </view>
+
+
+    <view class="arrow">
+      ›
+    </view>
+
+  </view>
+
+</block>
+
+
+
+<!-- 没有观察记录 -->
+<block wx:else>
+
+  <view class="empty-card">
+
+    <view class="empty-icon">
+      🌱
+    </view>
+
+    <view class="empty-title">
+      还没有观察记录
+    </view>
+
+    <view class="empty-text">
+      去发现身边的第一种野生动物吧。
+    </view>
+
+  </view>
+
+</block>
+
+
+</view>

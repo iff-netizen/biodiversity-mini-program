@@ -1,0 +1,213 @@
+<view
+  class="page"
+  wx:if="{{species}}"
+>
+
+
+  <!-- 物种顶部 -->
+  <view class="hero-card">
+
+    <view class="hero-placeholder">
+
+      <view class="animal-icon">
+        {{species.emoji}}
+      </view>
+
+    </view>
+
+
+    <view class="hero-content">
+
+      <view class="species-name">
+        {{species.name}}
+      </view>
+
+      <view class="english-name">
+        {{species.englishName}}
+      </view>
+
+      <view class="scientific-name">
+        {{species.scientificName}}
+      </view>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- 物种档案 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      物种档案
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        国家重点保护级别
+      </text>
+
+      <text class="info-value">
+        {{species.nationalProtection || '暂无数据'}}
+      </text>
+
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        中国生物多样性红色名录
+      </text>
+
+      <text class="info-value">
+        {{species.redList || '暂无数据'}}
+      </text>
+
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        IUCN 红色名录
+      </text>
+
+      <text class="info-value">
+        {{species.iucn || '暂无数据'}}
+      </text>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- 校园观察 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      校园观察
+    </view>
+
+
+    <!-- 有 Observation -->
+    <block wx:if="{{hasObservations}}">
+
+
+      <view class="observation-summary">
+
+        <view class="summary-number">
+          {{observationCount}}
+        </view>
+
+        <view class="summary-label">
+          累计观察次数
+        </view>
+
+      </view>
+
+
+
+      <view class="info-row">
+
+        <text class="info-label">
+          🕐 最近观察
+        </text>
+
+        <text class="info-value">
+          {{latestObservation.time}}
+        </text>
+
+      </view>
+
+
+
+      <view class="info-row">
+
+        <text class="info-label">
+          📍 最近地点
+        </text>
+
+        <text class="info-value">
+          {{latestObservation.locationName || '观察地点'}}
+        </text>
+
+      </view>
+
+
+
+      <view
+        class="latest-link"
+        bindtap="goToLatestObservation"
+      >
+        查看最近一次观察 ›
+      </view>
+
+
+    </block>
+
+
+
+    <!-- 没有 Observation -->
+    <block wx:else>
+
+      <view class="empty-box">
+
+        <view class="empty-icon">
+          🌿
+        </view>
+
+        <view class="empty-title">
+          还没有观察记录
+        </view>
+
+        <view class="empty-text">
+          成为第一个记录这个物种的人吧。
+        </view>
+
+      </view>
+
+    </block>
+
+  </view>
+
+
+
+  <!-- 物种故事 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      物种故事
+    </view>
+
+
+    <view class="empty-box">
+
+      <view class="empty-title">
+        内容正在完善
+      </view>
+
+      <view class="empty-text">
+        后续将补充物种介绍、行为特点、栖息环境和保护知识。
+      </view>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- 记录按钮 -->
+  <button
+    class="observe-button"
+    bindtap="reportObservation"
+  >
+    📷 我也发现了它
+  </button>
+
+
+</view>

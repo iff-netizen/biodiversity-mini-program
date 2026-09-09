@@ -1,0 +1,203 @@
+<view class="container">
+
+
+<!-- 页面标题 -->
+<view class="header">
+
+  <view class="title">
+    自然地图
+  </view>
+
+  <view class="subtitle">
+    发现身边正在发生的自然故事
+  </view>
+
+</view>
+
+
+
+<!-- 地图 -->
+<view class="map-card">
+
+  <map
+    class="map"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="15"
+    markers="{{markers}}"
+    bindmarkertap="onMarkerTap"
+  />
+
+</view>
+
+
+
+<!-- Marker 详情 -->
+<view
+  wx:if="{{showAnimalCard && selectedObservation}}"
+  class="animal-detail-card"
+>
+
+  <view class="card-header">
+
+    <view>
+
+      <view class="species-name">
+        {{selectedObservation.speciesName}}
+      </view>
+
+      <view class="scientific-name">
+        {{selectedObservation.scientificName}}
+      </view>
+
+    </view>
+
+
+    <view
+      class="close-button"
+      bindtap="closeAnimalCard"
+    >
+      ×
+    </view>
+
+  </view>
+
+
+
+  <view class="species-tag">
+    观察记录
+  </view>
+
+
+
+  <view class="info-row">
+
+    <text class="label">
+      📍 观察地点
+    </text>
+
+    <text>
+      {{selectedObservation.locationName}}
+    </text>
+
+  </view>
+
+
+
+  <view class="info-row">
+
+    <text class="label">
+      🕐 观察时间
+    </text>
+
+    <text>
+      {{selectedObservation.time}}
+    </text>
+
+  </view>
+
+
+
+  <view class="info-row">
+
+    <text class="label">
+      🤖 AI 可信度
+    </text>
+
+    <text>
+      {{selectedObservation.confidence}}%
+    </text>
+
+  </view>
+
+
+
+  <view class="info-row">
+
+    <text class="label">
+      📊 历史记录
+    </text>
+
+    <text>
+      {{selectedObservation.recordCount}} 次
+    </text>
+
+  </view>
+
+
+
+  <!-- 最主要的按钮 -->
+  <button
+    class="detail-button"
+    bindtap="goToObservationDetail"
+  >
+    查看本次观察
+  </button>
+
+
+  <!-- 次要入口 -->
+  <view
+    class="species-link"
+    bindtap="goToSpeciesDetail"
+  >
+    查看 {{selectedObservation.speciesName}} 物种档案 ›
+  </view>
+
+</view>
+
+
+
+<!-- 附近自然动态 -->
+<view class="section-title">
+  附近自然动态
+</view>
+
+
+
+<!-- 已经存在 Observation -->
+<view
+  wx:if="{{observationCount > 0}}"
+  class="card"
+>
+
+  <view class="animal-name">
+    🌿 已记录 {{observationCount}} 次自然观察
+  </view>
+
+  <view class="animal-info">
+    点击地图上的标记，可以查看每一次具体观察。
+  </view>
+
+</view>
+
+
+
+<!-- 还没有 Observation -->
+<view
+  wx:else
+  class="empty-map-card"
+>
+
+  <view class="empty-icon">
+    🌱
+  </view>
+
+  <view class="empty-title">
+    这里还没有观察记录
+  </view>
+
+  <view class="empty-text">
+    发现身边的野生动物，并记录你的第一次自然观察。
+  </view>
+
+  <button
+    class="observe-button"
+    bindtap="goToIdentify"
+  >
+    📷 开始观察
+  </button>
+
+</view>
+
+
+</view>

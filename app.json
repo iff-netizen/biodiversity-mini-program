@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/map/map",
+    "pages/discover/discover",
+    "pages/identify/identify",
+    "pages/collection/collection",
+    "pages/profile/profile",
+    "pages/species/species",
+    "pages/observation/observation"
+  ],
+
+  "window": {
+    "navigationBarTitleText": "生物多样性保护",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black"
+  },
+
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于记录野生动物观察地点和展示附近的自然观察记录"
+    }
+  },
+
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+
+  "tabBar": {
+    "color": "#777777",
+    "selectedColor": "#2f6b4f",
+    "backgroundColor": "#ffffff",
+
+    "list": [
+      {
+        "pagePath": "pages/map/map",
+        "text": "地图"
+      },
+      {
+        "pagePath": "pages/discover/discover",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/identify/identify",
+        "text": "识别"
+      },
+      {
+        "pagePath": "pages/collection/collection",
+        "text": "图鉴"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  }
+}

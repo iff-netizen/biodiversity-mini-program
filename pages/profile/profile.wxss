@@ -1,0 +1,332 @@
+.container {
+  padding: 32rpx;
+  padding-bottom: 70rpx;
+}
+
+
+/* 用户区域 */
+.profile-header {
+  text-align: center;
+
+  padding: 40rpx 0 34rpx;
+}
+
+
+.avatar {
+  width: 130rpx;
+  height: 130rpx;
+
+  margin: 0 auto;
+
+  border-radius: 50%;
+
+  background-color: #e8f1eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 64rpx;
+}
+
+
+.username {
+  margin-top: 20rpx;
+
+  font-size: 36rpx;
+
+  font-weight: 700;
+
+  color: #222222;
+}
+
+
+.level {
+  display: inline-block;
+
+  margin-top: 12rpx;
+
+  padding: 8rpx 20rpx;
+
+  background-color: #e8f1eb;
+
+  color: #2f6b4f;
+
+  border-radius: 30rpx;
+
+  font-size: 24rpx;
+}
+
+
+/* 数据统计 */
+.stats-card {
+  background-color: #ffffff;
+
+  border-radius: 28rpx;
+
+  padding: 32rpx 10rpx;
+
+  margin-bottom: 26rpx;
+
+  display: flex;
+
+  justify-content: space-around;
+
+  align-items: center;
+
+  box-shadow:
+    0 6rpx 24rpx
+    rgba(0, 0, 0, 0.04);
+}
+
+
+.stat-item {
+  flex: 1;
+
+  text-align: center;
+}
+
+
+.stat-number {
+  font-size: 42rpx;
+
+  font-weight: 700;
+
+  color: #2f6b4f;
+}
+
+
+.stat-label {
+  margin-top: 8rpx;
+
+  font-size: 24rpx;
+
+  color: #777777;
+}
+
+
+.stat-divider {
+  width: 1rpx;
+
+  height: 60rpx;
+
+  background-color: #eeeeee;
+}
+
+
+/* 通用区块 */
+.section-card {
+  background-color: #ffffff;
+
+  border-radius: 28rpx;
+
+  padding: 30rpx;
+
+  margin-bottom: 30rpx;
+
+  box-shadow:
+    0 6rpx 24rpx
+    rgba(0, 0, 0, 0.04);
+}
+
+
+.section-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 24rpx;
+}
+
+
+.section-title {
+  font-size: 32rpx;
+
+  font-weight: 700;
+
+  color: #222222;
+}
+
+
+.outside-title {
+  margin-top: 34rpx;
+
+  margin-bottom: 20rpx;
+}
+
+
+.more {
+  font-size: 24rpx;
+
+  color: #2f6b4f;
+}
+
+
+/* 图鉴进度 */
+.progress-info {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-bottom: 16rpx;
+
+  font-size: 25rpx;
+
+  color: #777777;
+}
+
+
+.progress-background {
+  width: 100%;
+
+  height: 18rpx;
+
+  background-color: #edf0ed;
+
+  border-radius: 20rpx;
+
+  overflow: hidden;
+}
+
+
+.progress-bar {
+  height: 100%;
+
+  background-color: #2f6b4f;
+
+  border-radius: 20rpx;
+}
+
+
+/* 观察记录 */
+.observation-card {
+  display: flex;
+
+  align-items: center;
+
+  background-color: #ffffff;
+
+  border-radius: 24rpx;
+
+  padding: 26rpx;
+
+  margin-bottom: 18rpx;
+
+  box-shadow:
+    0 4rpx 18rpx
+    rgba(0, 0, 0, 0.03);
+}
+
+
+.observation-icon {
+  width: 90rpx;
+
+  height: 90rpx;
+
+  flex-shrink: 0;
+
+  border-radius: 22rpx;
+
+  background-color: #e8f1eb;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 46rpx;
+
+  margin-right: 22rpx;
+}
+
+
+.observation-info {
+  flex: 1;
+}
+
+
+.observation-name {
+  font-size: 29rpx;
+
+  font-weight: 600;
+
+  color: #222222;
+}
+
+
+.observation-scientific {
+  margin-top: 5rpx;
+
+  font-size: 21rpx;
+
+  color: #888888;
+
+  font-style: italic;
+}
+
+
+.observation-meta {
+  margin-top: 10rpx;
+
+  font-size: 23rpx;
+
+  color: #777777;
+}
+
+
+.observation-time {
+  margin-top: 5rpx;
+
+  font-size: 21rpx;
+
+  color: #aaaaaa;
+}
+
+
+.arrow {
+  margin-left: 14rpx;
+
+  font-size: 42rpx;
+
+  color: #aaaaaa;
+}
+
+
+/* 空状态 */
+.empty-card {
+  background-color: #ffffff;
+
+  border-radius: 26rpx;
+
+  padding: 50rpx 30rpx;
+
+  text-align: center;
+}
+
+
+.empty-icon {
+  font-size: 60rpx;
+}
+
+
+.empty-title {
+  margin-top: 18rpx;
+
+  font-size: 29rpx;
+
+  font-weight: 600;
+
+  color: #333333;
+}
+
+
+.empty-text {
+  margin-top: 12rpx;
+
+  font-size: 25rpx;
+
+  color: #888888;
+}

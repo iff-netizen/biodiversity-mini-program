@@ -1,0 +1,176 @@
+<view class="container">
+
+<view class="header">
+  <view class="title">
+    自然发现
+  </view>
+
+  <view class="subtitle">
+    看看大家最近发现了什么
+  </view>
+</view>
+
+
+<view wx:if="{{posts.length > 0}}">
+
+  <view
+    wx:for="{{posts}}"
+    wx:key="id"
+    class="post-card"
+  >
+
+    <view class="post-header">
+
+      <view class="avatar">
+        🌿
+      </view>
+
+      <view class="user-info">
+
+        <view class="username">
+          自然观察者
+        </view>
+
+        <view class="post-time">
+          {{item.time}}
+        </view>
+
+      </view>
+
+    </view>
+
+
+    <image
+      wx:if="{{item.imagePath}}"
+      class="post-image"
+      src="{{item.imagePath}}"
+      mode="aspectFill"
+    />
+
+
+    <view class="post-content">
+      {{item.content}}
+    </view>
+
+
+    <view
+      class="species-box"
+      data-name="{{item.speciesName}}"
+      bindtap="goToSpeciesDetail"
+    >
+
+      <view>
+
+        <view class="species-name">
+          {{item.speciesName}}
+        </view>
+
+        <view class="scientific-name">
+          {{item.scientificName}}
+        </view>
+
+      </view>
+
+      <view class="species-arrow">
+        ›
+      </view>
+
+    </view>
+
+
+    <view class="meta-row">
+
+      <view>
+        📍 {{item.location}}
+      </view>
+
+      <view>
+        AI {{item.confidence}}%
+      </view>
+
+    </view>
+
+
+    <!-- 社区互动 -->
+    <view class="interaction-row">
+
+      <view
+        class="interaction-item {{item.liked ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="toggleLike"
+      >
+        {{item.liked ? '♥' : '♡'}}
+        赞 {{item.likeCount}}
+      </view>
+
+
+      <view
+        class="interaction-item {{item.seen ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="toggleSeen"
+      >
+        👀 我也见过 {{item.seenCount}}
+      </view>
+
+
+      <view
+        class="interaction-item"
+        data-id="{{item.id}}"
+        bindtap="addComment"
+      >
+        💬 评论 {{item.commentCount}}
+      </view>
+
+    </view>
+
+
+    <!-- 评论区 -->
+    <view
+      wx:if="{{item.comments.length > 0}}"
+      class="comment-box"
+    >
+
+      <view
+        wx:for="{{item.comments}}"
+        wx:for-item="comment"
+        wx:key="id"
+        class="comment-item"
+      >
+
+        <text class="comment-user">
+          {{comment.username}}：
+        </text>
+
+        <text class="comment-content">
+          {{comment.content}}
+        </text>
+
+      </view>
+
+    </view>
+
+  </view>
+
+</view>
+
+
+<view
+  wx:else
+  class="empty-card"
+>
+
+  <view class="empty-icon">
+    🌱
+  </view>
+
+  <view class="empty-title">
+    还没有自然动态
+  </view>
+
+  <view class="empty-text">
+    当你记录第一次自然观察后，它会出现在这里。
+  </view>
+
+</view>
+
+</view>

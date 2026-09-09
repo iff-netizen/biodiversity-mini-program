@@ -1,0 +1,268 @@
+/* pages/identify/identify.wxss */
+
+.upload-box {
+  margin-top: 40rpx;
+  height: 520rpx;
+  background-color: #ffffff;
+  border-radius: 30rpx;
+  overflow: hidden;
+}
+
+.upload-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #777777;
+}
+
+.camera {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+}
+
+.identify-button {
+  margin-top: 30rpx;
+  background-color: #2f6b4f;
+  color: #ffffff;
+  border-radius: 40rpx;
+}
+
+
+/* AI结果 */
+
+.result-card {
+  margin-top: 36rpx;
+  background-color: #ffffff;
+  border-radius: 28rpx;
+  padding: 36rpx;
+}
+
+.new-tag {
+  color: #2f6b4f;
+  margin-bottom: 20rpx;
+}
+
+.species-name {
+  font-size: 46rpx;
+  font-weight: bold;
+}
+
+.scientific-name {
+  margin-top: 8rpx;
+  color: #888888;
+  font-style: italic;
+}
+
+.confidence {
+  margin-top: 28rpx;
+  color: #2f6b4f;
+}
+
+.description {
+  margin-top: 24rpx;
+  line-height: 1.8;
+  color: #666666;
+}
+
+
+/* 确认区域 */
+
+.confirm-area {
+  margin-top: 36rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #eeeeee;
+}
+
+.confirm-title {
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 26rpx;
+}
+
+.confirm-button {
+  background-color: #2f6b4f;
+  color: #ffffff;
+  border-radius: 40rpx;
+}
+
+.correction-button {
+  margin-top: 18rpx;
+  background-color: #ffffff;
+  color: #555555;
+  border: 2rpx solid #dddddd;
+  border-radius: 40rpx;
+}
+
+
+/* 物种纠错列表 */
+
+.species-selector {
+  margin-top: 36rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #eeeeee;
+}
+
+.selector-title {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.selector-tip {
+  margin-top: 10rpx;
+  margin-bottom: 24rpx;
+  color: #888888;
+  font-size: 25rpx;
+}
+
+.species-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.species-option {
+  width: 47%;
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+  padding: 24rpx 16rpx;
+
+  background-color: #f6f8f5;
+
+  border-radius: 20rpx;
+
+  display: flex;
+  align-items: center;
+}
+
+.option-emoji {
+  font-size: 38rpx;
+  margin-right: 14rpx;
+}
+
+.option-name {
+  font-size: 27rpx;
+  color: #333333;
+}
+
+
+/* 最终确认 */
+
+.confirmed-card {
+  margin-top: 34rpx;
+  padding: 28rpx;
+
+  background-color: #f4f8f5;
+
+  border-radius: 22rpx;
+}
+
+.confirmed-label {
+  color: #2f6b4f;
+  font-size: 25rpx;
+}
+
+.confirmed-name {
+  margin-top: 12rpx;
+  font-size: 38rpx;
+  font-weight: bold;
+}
+
+.confirmed-scientific {
+  margin-top: 6rpx;
+  color: #888888;
+  font-style: italic;
+}
+
+.corrected-tip {
+  margin-top: 22rpx;
+  padding: 20rpx;
+
+  background-color: #fff7e8;
+
+  border-radius: 16rpx;
+
+  color: #8a6427;
+
+  font-size: 25rpx;
+
+  line-height: 1.6;
+}
+
+.correct-tip {
+  margin-top: 22rpx;
+  color: #2f6b4f;
+  font-size: 25rpx;
+}
+
+.change-button {
+  margin-top: 26rpx;
+
+  background-color: #ffffff;
+
+  color: #555555;
+
+  border: 2rpx solid #dddddd;
+
+  border-radius: 40rpx;
+
+  font-size: 28rpx;
+}
+
+.save-button {
+  margin-top: 20rpx;
+
+  background-color: #2f6b4f;
+
+  color: #ffffff;
+
+  border-radius: 40rpx;
+}
+
+.detail-button {
+  margin-top: 20rpx;
+
+  background-color: #ffffff;
+
+  color: #2f6b4f;
+
+  border: 2rpx solid #2f6b4f;
+
+  border-radius: 40rpx;
+
+  font-size: 28rpx;
+}
+
+.option-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.option-name {
+  font-size: 27rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.option-scientific {
+  margin-top: 6rpx;
+
+  font-size: 20rpx;
+
+  color: #999999;
+
+  font-style: italic;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}

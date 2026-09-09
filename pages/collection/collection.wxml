@@ -1,0 +1,64 @@
+<view class="container">
+
+<view class="header">
+
+  <view class="title">
+    我的自然图鉴
+  </view>
+
+  <view class="subtitle">
+    已发现 {{unlockedCount}} / {{animals.length}}
+  </view>
+
+</view>
+
+
+<view class="collection-grid">
+
+  <view
+    wx:for="{{animals}}"
+    wx:key="id"
+    class="species-card {{item.unlocked ? 'unlocked' : 'locked'}}"
+    data-name="{{item.name}}"
+    data-unlocked="{{item.unlocked}}"
+    bindtap="goToSpecies"
+  >
+
+    <view class="species-icon">
+      {{item.unlocked ? item.emoji : '❓'}}
+    </view>
+
+
+    <view class="species-name">
+      {{item.unlocked ? item.name : '等待发现'}}
+    </view>
+
+
+    <view
+      wx:if="{{item.unlocked}}"
+      class="scientific-name"
+    >
+      {{item.scientificName}}
+    </view>
+
+
+    <view
+      wx:if="{{item.unlocked}}"
+      class="status-tag"
+    >
+      已发现
+    </view>
+
+
+    <view
+      wx:else
+      class="locked-text"
+    >
+      尚未解锁
+    </view>
+
+  </view>
+
+</view>
+
+</view>

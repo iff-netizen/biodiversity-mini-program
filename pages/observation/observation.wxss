@@ -1,0 +1,291 @@
+.container {
+  padding: 32rpx;
+  padding-bottom: 70rpx;
+}
+
+
+/* 图片 */
+.image-card {
+  width: 100%;
+
+  border-radius: 28rpx;
+
+  overflow: hidden;
+
+  background-color: #eef3ef;
+
+  margin-bottom: 24rpx;
+}
+
+
+.observation-image {
+  display: block;
+
+  width: 100%;
+
+  height: 520rpx;
+}
+
+
+.image-placeholder {
+  height: 420rpx;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 100rpx;
+}
+
+
+/* 物种卡片 */
+.species-card {
+  background-color: #ffffff;
+
+  border-radius: 28rpx;
+
+  padding: 28rpx;
+
+  margin-bottom: 24rpx;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  box-shadow:
+    0 6rpx 24rpx
+    rgba(0, 0, 0, 0.04);
+}
+
+
+.species-main {
+  display: flex;
+
+  align-items: center;
+
+  flex: 1;
+}
+
+
+.species-icon {
+  width: 90rpx;
+
+  height: 90rpx;
+
+  border-radius: 22rpx;
+
+  background-color: #e8f1eb;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 46rpx;
+
+  margin-right: 22rpx;
+}
+
+
+.species-info {
+  flex: 1;
+}
+
+
+.species-name {
+  font-size: 36rpx;
+
+  font-weight: 700;
+
+  color: #222222;
+}
+
+
+.scientific-name {
+  margin-top: 7rpx;
+
+  font-size: 23rpx;
+
+  color: #888888;
+
+  font-style: italic;
+}
+
+
+.ai-tag {
+  padding: 8rpx 18rpx;
+
+  border-radius: 30rpx;
+
+  background-color: #e8f1eb;
+
+  color: #2f6b4f;
+
+  font-size: 23rpx;
+}
+
+
+/* 通用卡片 */
+.section-card {
+  background-color: #ffffff;
+
+  border-radius: 28rpx;
+
+  padding: 30rpx;
+
+  margin-bottom: 24rpx;
+
+  box-shadow:
+    0 6rpx 24rpx
+    rgba(0, 0, 0, 0.04);
+}
+
+
+.section-title {
+  font-size: 31rpx;
+
+  font-weight: 700;
+
+  color: #222222;
+
+  margin-bottom: 24rpx;
+}
+
+
+/* 信息 */
+.info-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  margin-bottom: 22rpx;
+
+  font-size: 26rpx;
+}
+
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+
+.info-label {
+  color: #777777;
+
+  margin-right: 20rpx;
+}
+
+
+.info-value {
+  color: #333333;
+
+  text-align: right;
+
+  flex: 1;
+}
+
+
+/* 经纬度 */
+.coordinate-box {
+  display: flex;
+
+  background-color: #f5f8f5;
+
+  border-radius: 22rpx;
+
+  padding: 26rpx 10rpx;
+}
+
+
+.coordinate-item {
+  flex: 1;
+
+  text-align: center;
+}
+
+
+.coordinate-label {
+  font-size: 23rpx;
+
+  color: #888888;
+}
+
+
+.coordinate-value {
+  margin-top: 9rpx;
+
+  font-size: 27rpx;
+
+  font-weight: 600;
+
+  color: #2f6b4f;
+}
+
+
+.coordinate-divider {
+  width: 1rpx;
+
+  background-color: #dddddd;
+}
+
+
+.location-tip {
+  margin-top: 20rpx;
+
+  font-size: 23rpx;
+
+  line-height: 1.7;
+
+  color: #999999;
+}
+
+
+/* 说明 */
+.record-tip {
+  background-color: #f5f8f5;
+
+  padding: 24rpx;
+
+  border-radius: 20rpx;
+
+  font-size: 25rpx;
+
+  line-height: 1.8;
+
+  color: #666666;
+}
+
+
+/* 按钮 */
+.species-button {
+  margin-top: 12rpx;
+
+  background-color: #2f6b4f;
+
+  color: #ffffff;
+
+  border-radius: 44rpx;
+
+  font-size: 28rpx;
+}
+
+.delete-button {
+  margin-top: 22rpx;
+
+  background-color: #ffffff;
+
+  color: #c94a4a;
+
+  border: 2rpx solid #e3b1b1;
+
+  border-radius: 44rpx;
+
+  font-size: 28rpx;
+}

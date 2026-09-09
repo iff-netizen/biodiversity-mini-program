@@ -1,0 +1,195 @@
+<view
+  class="container"
+  wx:if="{{observation}}"
+>
+
+
+  <!-- 图片 -->
+  <view class="image-card">
+
+    <image
+      wx:if="{{observation.imagePath}}"
+      class="observation-image"
+      src="{{observation.imagePath}}"
+      mode="aspectFill"
+    />
+
+    <view
+      wx:else
+      class="image-placeholder"
+    >
+      {{species ? species.emoji : '🌿'}}
+    </view>
+
+  </view>
+
+
+
+  <!-- 物种 -->
+  <view class="species-card">
+
+    <view class="species-main">
+
+      <view class="species-icon">
+        {{species ? species.emoji : '🌿'}}
+      </view>
+
+
+      <view class="species-info">
+
+        <view class="species-name">
+          {{observation.speciesName}}
+        </view>
+
+        <view class="scientific-name">
+          {{observation.scientificName}}
+        </view>
+
+      </view>
+
+    </view>
+
+
+    <view class="ai-tag">
+      AI {{observation.confidence}}%
+    </view>
+
+  </view>
+
+
+
+  <!-- 本次观察 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      本次观察
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        🕐 观察时间
+      </text>
+
+      <text class="info-value">
+        {{observation.time}}
+      </text>
+
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        📍 观察地点
+      </text>
+
+      <text class="info-value">
+        {{observation.locationName || '观察地点'}}
+      </text>
+
+    </view>
+
+
+    <view class="info-row">
+
+      <text class="info-label">
+        🤖 AI 可信度
+      </text>
+
+      <text class="info-value">
+        {{observation.confidence}}%
+      </text>
+
+    </view>
+
+  </view>
+
+
+
+  <!-- 经纬度 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      位置信息
+    </view>
+
+
+    <view class="coordinate-box">
+
+      <view class="coordinate-item">
+
+        <view class="coordinate-label">
+          纬度
+        </view>
+
+        <view class="coordinate-value">
+          {{observation.latitude}}
+        </view>
+
+      </view>
+
+
+      <view class="coordinate-divider">
+      </view>
+
+
+      <view class="coordinate-item">
+
+        <view class="coordinate-label">
+          经度
+        </view>
+
+        <view class="coordinate-value">
+          {{observation.longitude}}
+        </view>
+
+      </view>
+
+    </view>
+
+
+    <view class="location-tip">
+      当前版本暂时保存原始定位坐标，后续可以接入地图逆地理编码，将经纬度转换为具体地点。
+    </view>
+
+  </view>
+
+
+
+  <!-- 记录说明 -->
+  <view class="section-card">
+
+    <view class="section-title">
+      记录信息
+    </view>
+
+    <view class="record-tip">
+      这是一条独立的自然观察记录，代表某个时间、某个地点发生的一次野生动物观察。
+    </view>
+
+  </view>
+
+
+
+  <!-- 查看 Species -->
+  <button
+    class="species-button"
+    bindtap="goToSpeciesDetail"
+  >
+    查看 {{observation.speciesName}} 物种档案
+  </button>
+
+
+
+  <!-- 删除 -->
+  <button
+    class="delete-button"
+    bindtap="deleteObservation"
+  >
+    删除本次观察
+  </button>
+
+
+</view>
