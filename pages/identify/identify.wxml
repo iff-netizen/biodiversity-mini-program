@@ -254,6 +254,13 @@
       查看{{confirmedSpecies.name}}物种详情
     </button>
 
+     <button
+      class="detail-button"
+      bindtap="goToRescueHelp"
+    >
+      救援联系方式与应对提示
+    </button>
+
   </view>
 
 

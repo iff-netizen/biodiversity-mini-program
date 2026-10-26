@@ -1,0 +1,152 @@
+<view class="container">
+
+  <view class="title">动物救援帮助</view>
+
+  <view class="subtitle">
+    查看当前动物的求助渠道与应对提示
+  </view>
+
+  <view class="card">
+    <view class="section-title">当前动物</view>
+
+    <block wx:if="{{species}}">
+      <view class="species-name">{{species.name}}</view>
+
+      <view class="scientific-name">
+        {{species.scientificName}}
+      </view>
+    </block>
+
+    <view wx:else class="description">
+      暂未获取到已确认的物种信息。
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">求助与联系渠道</view>
+
+    <view class="description">
+      请按用途联系，服务时间及受理范围待核实。
+    </view>
+  </view>
+
+  <view
+    wx:for="{{rescueContacts}}"
+    wx:key="id"
+    class="card"
+  >
+
+    <view class="section-title">
+      <block wx:if="{{item.id === 'school-property'}}">
+        BNBU｜物业联系
+      </block>
+
+      <block wx:elif="{{item.id === 'school-medical'}}">
+        BNBU｜人员医疗求助
+      </block>
+
+      <block wx:else>
+        {{item.category}}
+      </block>
+    </view>
+
+    <view class="species-name">
+      {{item.name}}
+    </view>
+
+    <view class="description" selectable="{{true}}">
+      电话：{{item.phone}}
+    </view>
+
+    <view
+      wx:if="{{item.otherPhones}}"
+      class="description"
+      selectable="{{true}}"
+    >
+      {{item.otherPhones}}
+    </view>
+
+    <block wx:if="{{item.id === 'school-property'}}">
+      <view class="description">
+        校内事务联系，动物相关协调范围待确认。
+      </view>
+    </block>
+
+    <block wx:elif="{{item.id === 'school-medical'}}">
+      <view class="description">
+        人员医疗求助，不用于动物救治。
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="description">
+        {{item.description}}
+      </view>
+
+      <view class="description">
+        {{item.verification}}
+      </view>
+    </block>
+
+    <view class="description">
+      {{item.serviceTime}}
+    </view>
+
+    <view class="scientific-name">
+      来源：{{item.id === 'school-property' || item.id === 'school-medical' ? 'BNBU通讯录' : '凤凰网广东'}}
+    </view>
+
+    <button
+      wx:if="{{item.phone}}"
+      data-id="{{item.id}}"
+      bindtap="callContact"
+      style="margin-top: 24rpx; background-color: #2f6b4f; color: #ffffff; border-radius: 16rpx; font-size: 28rpx;"
+    >
+      拨打电话
+    </button>
+
+  </view>
+
+  <view class="card">
+    <view class="section-title">现场应对提示</view>
+
+    <block wx:if="{{rescueGuide}}">
+
+      <view class="species-name">
+        {{rescueGuide.title}}
+      </view>
+
+      <view
+        wx:for="{{rescueGuide.tips}}"
+        wx:for-item="tip"
+        wx:for-index="tipIndex"
+        wx:key="*this"
+        class="description"
+        style="margin-bottom: 16rpx;"
+      >
+        {{tipIndex + 1}}. {{tip}}
+      </view>
+
+      <view class="scientific-name">
+        参考来源：{{rescueGuide.source}}
+      </view>
+
+      <view
+        class="description"
+        style="margin-top: 20rpx;"
+      >
+        根据公开资料整理，专业审核待完成。仅供初步参考，具体处置请遵循专业人员指导。
+      </view>
+
+    </block>
+
+    <view wx:else class="description">
+      暂无对应物种的应对提示，请咨询专业人员。
+    </view>
+  </view>
+
+  <view class="subtitle">
+    本页仅提供联系信息与参考提示，不代表已提交求助或已有人员接单；所列单位非平台合作方。
+  </view>
+
+</view>

@@ -6,7 +6,8 @@
     "pages/collection/collection",
     "pages/profile/profile",
     "pages/species/species",
-    "pages/observation/observation"
+    "pages/observation/observation",
+    "pages/help/help"
   ],
 
   "window": {

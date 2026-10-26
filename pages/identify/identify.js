@@ -1016,6 +1016,23 @@ Page({
 
     })
 
+  },
+    goToRescueHelp() {
+
+    const species = this.data.confirmedSpecies
+
+    if (!species) {
+      wx.showToast({
+        title: '请先确认物种',
+        icon: 'none'
+      })
+      return
+    }
+
+    wx.navigateTo({
+      url: `/pages/help/help?speciesId=${species.id}`
+    })
+
   }
 
 })

@@ -1,0 +1,35 @@
+.title {
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  margin-bottom: 28rpx;
+  line-height: 1.7;
+}
+
+.section-title {
+  margin-bottom: 20rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #222222;
+}
+
+.species-name {
+  margin-bottom: 12rpx;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2f6b4f;
+}
+
+.scientific-name {
+  font-size: 26rpx;
+  color: #888888;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.description {
+  font-size: 28rpx;
+  color: #666666;
+  line-height: 1.8;
+}
