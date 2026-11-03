@@ -277,3 +277,27 @@
 .comment-content {
   color: #444444;
 }
+
+.connection { font-size: 23rpx; color: #708272; margin-bottom: 24rpx; }
+.model-notice { padding: 20rpx 24rpx; margin-bottom: 22rpx; background: #fff6df; color: #775f2a; border-radius: 16rpx; font-size: 25rpx; line-height: 1.7; }
+.tabs { display: flex; background: #eaf0ea; border-radius: 18rpx; padding: 6rpx; margin-bottom: 24rpx; }
+.tab { flex: 1; text-align: center; padding: 16rpx 4rpx; font-size: 26rpx; color: #6a776d; border-radius: 14rpx; }
+.tab.selected { background: #fff; color: #2f6b4f; font-weight: 600; }
+.composer { background: #fff; border-radius: 24rpx; padding: 28rpx; margin-bottom: 28rpx; }
+.composer textarea { width: 100%; min-height: 140rpx; font-size: 29rpx; line-height: 1.7; }
+.notice { font-size: 23rpx; color: #7d857e; line-height: 1.7; margin: 16rpx 0; }
+.memory-row { display: flex; justify-content: space-between; align-items: center; font-size: 23rpx; color: #596e5e; gap: 12rpx; }
+.memory-row text { flex: 1; }
+.publish { background: #2f6b4f; color: #fff; border-radius: 16rpx; font-size: 28rpx; margin-top: 18rpx; }
+.share-tag { color: #426c51; background: #edf4ed; padding: 14rpx; border-radius: 12rpx; font-size: 23rpx; line-height: 1.6; }
+.error { background: #fff2de; color: #8b5b27; font-size: 25rpx; padding: 24rpx; border-radius: 16rpx; margin-bottom: 24rpx; }
+.user-info { flex: 1; min-width: 0; }
+.more { color: #777; padding: 18rpx; }
+.post-content, .comment-content { white-space: pre-wrap; word-break: break-all; }
+.comment-item { display: flex; gap: 14rpx; margin-bottom: 24rpx; }
+.ai-avatar { width: 48rpx; height: 48rpx; flex-shrink: 0; border-radius: 50%; background-color: #FFD84D; }
+.comment-body { flex: 1; min-width: 0; }
+.ai-badge { display: inline-block; font-size: 19rpx; line-height: 1.4; padding: 1rpx 7rpx; color: #78611a; background: #fff0b1; border-radius: 6rpx; margin-left: 10rpx; }
+.reply-label { font-size: 22rpx; color: #999; }
+.comment-tools { display: flex; gap: 28rpx; font-size: 22rpx; color: #758679; margin-top: 10rpx; }
+.pagination { display: flex; justify-content: space-between; padding: 20rpx 0; }

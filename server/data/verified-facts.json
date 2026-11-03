@@ -1,0 +1,20 @@
+[
+  {
+    "id": "wildlife-no-feeding-v1", "status": "verified", "speciesTags": ["野生动物"],
+    "topicTags": ["善待野生动物"],
+    "text": "投喂会让野生动物把人类与食物联系起来，并可能导致危险接触；观察时不投喂、不触碰。",
+    "approvedTexts": ["先别喂啦，远远看看就好。野生动物习惯从人那里得到食物，接触时反而容易出危险。", "喜欢它也先不投喂吧，让野生动物把人当成食物来源，可能增加危险接触。"],
+    "sourceUrl": "https://www.nps.gov/subjects/watchingwildlife/7ways.htm",
+    "sourceTitle": "NPS: 7 Ways to Safely Watch Wildlife (sections 3, 5)",
+    "verifiedAt": "2026-11-03", "scope": "一般观察建议；不引用美国公园法律或距离规定作为中国规定"
+  },
+  {
+    "id": "wildlife-distance-v1", "status": "verified", "speciesTags": ["野生动物"],
+    "topicTags": ["观鸟", "善待野生动物"],
+    "text": "可以使用望远镜或变焦镜头远距离观察；若动物因你的存在作出反应，应拉开距离。",
+    "approvedTexts": ["先别追上去拍啦，用变焦镜头远远看就好。如果它已经因为你在场而躲开，就再退远一点。", "想看清可以用望远镜或变焦镜头；小动物若因为你在场而改变行为，就给它再多留些距离。"],
+    "sourceUrl": "https://www.nps.gov/subjects/watchingwildlife/7ways.htm",
+    "sourceTitle": "NPS: 7 Ways to Safely Watch Wildlife (section 2)",
+    "verifiedAt": "2026-11-03", "scope": "一般观察建议；不提供精确点位、鉴定或保护等级"
+  }
+]

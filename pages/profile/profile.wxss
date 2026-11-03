@@ -3,6 +3,11 @@
   padding-bottom: 70rpx;
 }
 
+.community-row { display: flex; align-items: center; justify-content: space-between; margin: 20rpx 0; font-size: 28rpx; }
+.community-note { color: #777; font-size: 24rpx; line-height: 1.7; margin: 16rpx 0; }
+.developer-panel { border-top: 1rpx solid #e8eee9; margin-top: 24rpx; padding-top: 12rpx; }
+.debug-row { font-size: 22rpx; line-height: 1.7; word-break: break-all; white-space: pre-wrap; padding: 16rpx; background: #f4f7f4; margin-top: 12rpx; border-radius: 12rpx; }
+
 
 /* 用户区域 */
 .profile-header {

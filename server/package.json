@@ -1,0 +1,14 @@
+{
+  "name": "biodiversity-community-local",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-only native mini-program community and AI worker",
+  "engines": { "node": ">=24.22.1 <25" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node scripts/check.js",
+    "demo": "node scripts/demo.js",
+    "tone": "node --env-file-if-exists=.env scripts/tone.js"
+  }
+}

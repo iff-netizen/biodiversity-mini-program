@@ -1,3 +1,4 @@
+const community = require('../../services/community')
 const {
   speciesList,
   getSpeciesByName
@@ -897,18 +898,11 @@ Page({
             )
 
 
-            console.log(
-              '保存成功：',
-              newObservation
-            )
-
-
-            wx.showToast({
-
-              title: '观察记录已保存',
-
-              icon: 'success'
-
+            wx.showModal({
+              title: '观察已保存在本机',
+              content: '是否补充文字分享到发现？仅分享文字与用户确认的物种，不上传照片或精确位置。',
+              confirmText: '去分享', cancelText: '暂不分享',
+              success: res => { if (res.confirm) community.shareObservation(newObservation) }
             })
 
 

@@ -1,3 +1,4 @@
+const community = require('../../services/community')
 const {
   getSpeciesByName
 } = require('../../data/species.js')
@@ -14,7 +15,7 @@ Page({
   onLoad(options) {
 
     const id =
-      Number(options.id)
+      options.id == null ? '' : String(options.id)
 
 
     if (!id) {
@@ -44,8 +45,8 @@ Page({
     const observation =
       observations.find(
         item =>
-          Number(item.id) ===
-          Number(id)
+          String(item.id) ===
+          String(id)
       )
 
 
@@ -109,6 +110,10 @@ Page({
 
 
   // 删除观察记录
+  shareObservation() {
+    if (this.data.observation) community.shareObservation(this.data.observation)
+  },
+
   deleteObservation() {
 
     const observation =
@@ -132,7 +137,7 @@ Page({
       title: '删除观察记录',
 
       content:
-        `确定删除这次“${observation.speciesName}”观察吗？删除后无法恢复。`,
+        `删除这次“${observation.speciesName}”本机观察及其本机互动${community.hasShares(observation.id) ? '，并删除本机曾分享的开发身份下关联动态、取消任务及撤回记忆引用。需要本地服务连接成功' : ''}。删除后无法恢复。`,
 
       confirmText: '删除',
 
@@ -141,9 +146,16 @@ Page({
       confirmColor: '#d9534f',
 
 
-      success: (res) => {
+      success: async (res) => {
 
         if (!res.confirm) {
+          return
+        }
+
+        try {
+          if (community.hasShares(observation.id)) await community.deleteLinkedPosts(observation.id)
+        } catch (error) {
+          wx.showModal({ title: '关联动态尚未全部删除', content: '个人观察仍保留，请连接本地服务后重试。已成功删除的动态不会恢复。', showCancel: false })
           return
         }
 
@@ -157,8 +169,8 @@ Page({
         const newObservations =
           observations.filter(
             item =>
-              Number(item.id) !==
-              Number(observation.id)
+              String(item.id) !==
+              String(observation.id)
           )
 
 
@@ -191,12 +203,6 @@ Page({
           )
 
         }
-
-
-        console.log(
-          '已删除 Observation：',
-          observation
-        )
 
 
         wx.showToast({

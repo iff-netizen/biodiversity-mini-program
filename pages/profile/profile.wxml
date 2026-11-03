@@ -21,6 +21,29 @@
 
 
 <!-- 数据统计 -->
+<view class="section-card community-settings">
+  <view class="section-title">社区互动</view>
+  <view class="community-row"><text>接收小黄的 AI 互动</text><switch checked="{{aiEnabled}}" bindchange="changeAi" color="#2f6b4f" disabled="{{settingBusy}}" /></view>
+  <view class="community-note">关闭后取消等待中的互动。可在动态菜单撤回共享记忆许可，在 AI 评论下隐藏或反馈。</view>
+  <view class="community-note">本地开发身份 {{communityIdentity}} · {{communityMode === 'real' ? '真实模型' : 'Mock 功能演示'}}，仅用于本机试用。</view>
+  <view wx:if="{{communityMode === 'mock'}}" class="community-note">尚未连接真实模型，目前的有限示例不代表小黄正式的自由聊天效果。</view>
+  <button size="mini" bindtap="switchIdentity">切换 A / B / C</button>
+  <view wx:if="{{communityError}}" class="community-note">{{communityError}}</view>
+  <view wx:if="{{devControls}}" class="developer-panel">
+    <view class="community-note">开发诊断（仅本机；普通用户流程无需使用）</view>
+    <button size="mini" bindtap="diagnostics">刷新决策与来源</button><button size="mini" bindtap="advanceJobs">推进 60 秒并执行任务</button>
+    <block wx:if="{{showDiagnostics}}">
+      <view wx:for="{{debugJobs}}" wx:key="id" class="debug-row">{{item.kind}} · {{item.status}} · {{item.reason_code}}
+概率 {{item.probability}} / 随机值 {{item.random_value}} / 尝试 {{item.attempts}}
+测试强制 {{item.force_test ? '是（仅测试数据）' : '否'}}
+到期 {{item.dueTime}}
+命中记忆 {{item.memory_ids}}
+来源 {{item.source_ids}}</view>
+      <view wx:for="{{debugMemories}}" wx:key="id" class="debug-row">{{item.summary}} · {{item.independent_authors}} 位独立作者
+<text wx:for="{{item.sources}}" wx:for-item="source" wx:key="source_id">{{source.source_id}} </text></view>
+    </block>
+  </view>
+</view>
 <view class="stats-card">
 
   <view class="stat-item">
