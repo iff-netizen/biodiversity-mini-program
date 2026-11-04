@@ -1,176 +1,53 @@
 <view class="container">
-
-<view class="header">
-  <view class="title">
-    自然发现
+  <view class="header"><view class="title">自然发现</view><view class="subtitle">把今天的小发现，留在这里。</view></view>
+  <view class="connection">本地体验 · 用户 {{identity}} · {{providerMode === 'real' ? '真实模型' : 'Mock 功能演示'}}<text wx:if="{{loading}}"> · 更新中</text></view>
+  <view wx:if="{{providerMode === 'mock'}}" class="model-notice">尚未连接真实模型。当前只有少量功能示例回复，无法体验完整的自由聊天语气。</view>
+  <view wx:if="{{aiStatus.code === 'missing_credentials'}}" class="model-notice">模型配置尚未填写完整，暂时无法生成真实回复。</view>
+  <view wx:if="{{aiStatus.code === 'insufficient_balance'}}" class="model-notice">模型账户余额不足，已停止请求。充值后重启本地服务即可继续体验。</view>
+  <view class="tabs">
+    <view class="tab {{view === 'public' ? 'selected' : ''}}" data-view="public" bindtap="switchView">广场</view>
+    <view class="tab {{view === 'mine' ? 'selected' : ''}}" data-view="mine" bindtap="switchView">我的动态</view>
+    <view class="tab {{view === 'local' ? 'selected' : ''}}" data-view="local" bindtap="switchView">本机观察</view>
   </view>
-
-  <view class="subtitle">
-    看看大家最近发现了什么
+  <view wx:if="{{view !== 'local'}}" class="composer">
+    <textarea value="{{content}}" bindinput="updateContent" maxlength="600" placeholder="今天遇见了什么？没拍到，也可以聊聊。" auto-height disabled="{{sending}}" />
+    <view wx:if="{{share}}" class="share-tag">分享观察：{{share.speciesName}}（用户记录，未经专业鉴定）<text bindtap="clearShare">　取消关联</text></view>
+    <view class="notice">公开内容可能用于 AI 社区互动，可在“我的”关闭。照片与定位仅保存在本机，本次分享文字和物种信息。</view>
+    <view class="memory-row"><text>允许这条动态及评论用于共享话题记忆</text><switch checked="{{memoryAllowed}}" bindchange="updateMemory" color="#2f6b4f" disabled="{{sending}}" /></view>
+    <button class="publish" bindtap="publish" loading="{{sending}}" disabled="{{sending || !content}}">公开发布</button>
+    <view class="notice">小黄偶尔串门，不保证回复；@ 也一样。草稿会留在本机。</view>
   </view>
-</view>
-
-
-<view wx:if="{{posts.length > 0}}">
-
-  <view
-    wx:for="{{posts}}"
-    wx:key="id"
-    class="post-card"
-  >
-
-    <view class="post-header">
-
-      <view class="avatar">
-        🌿
+  <view wx:if="{{error}}" class="error" bindtap="retry">{{error}} · 点击重试</view>
+  <block wx:if="{{view !== 'local'}}">
+    <view wx:for="{{posts}}" wx:key="id" class="post-card">
+      <view class="post-header"><view class="avatar">🌿</view><view class="user-info"><view class="username">{{item.displayName}}</view><view class="post-time">{{item.time}} · {{item.visibility === 'private' ? '仅自己可见' : '公开'}}</view></view><text wx:if="{{item.isMine}}" data-id="{{item.id}}" bindtap="postMenu" class="more">•••</text></view>
+      <view class="post-content">{{item.content}}</view>
+      <view wx:if="{{item.speciesName}}" class="share-tag">{{item.speciesName}} · 用户观察描述，未经专业鉴定</view>
+      <view class="interaction-row" wx:if="{{item.visibility === 'public'}}">
+        <view class="interaction-item {{item.liked ? 'active' : ''}}" data-id="{{item.id}}" bindtap="toggleLike">{{item.liked ? '♥' : '♡'}} 赞 {{item.likeCount}}</view>
+        <view class="interaction-item {{item.seen ? 'active' : ''}}" data-id="{{item.id}}" bindtap="toggleSeen">我也见过 {{item.seenCount}}</view>
+        <view class="interaction-item" data-id="{{item.id}}" bindtap="addComment">评论 {{item.commentCount}}</view>
       </view>
-
-      <view class="user-info">
-
-        <view class="username">
-          自然观察者
+      <view class="comment-box" wx:if="{{item.comments.length}}">
+        <view wx:for="{{item.comments}}" wx:for-item="comment" wx:key="id" class="comment-item">
+          <view wx:if="{{comment.authorType === 'ai'}}" class="ai-avatar"></view>
+          <view class="comment-body"><view><text class="comment-user">{{comment.displayName}}</text><text wx:if="{{comment.authorType === 'ai'}}" class="ai-badge">AI</text><text wx:if="{{comment.providerMode === 'mock'}}" class="reply-label"> · Mock 演示</text><text wx:if="{{comment.replyToCommentId}}" class="reply-label"> · 回复</text></view><view class="comment-content">{{comment.content}}</view><view class="comment-tools"><text data-id="{{item.id}}" data-comment="{{comment.id}}" bindtap="addComment">回复</text><text wx:if="{{comment.authorType === 'ai'}}" data-comment="{{comment.id}}" bindtap="commentMenu">隐藏 / 反馈</text></view></view>
         </view>
-
-        <view class="post-time">
-          {{item.time}}
-        </view>
-
       </view>
-
     </view>
-
-
-    <image
-      wx:if="{{item.imagePath}}"
-      class="post-image"
-      src="{{item.imagePath}}"
-      mode="aspectFill"
-    />
-
-
-    <view class="post-content">
-      {{item.content}}
+    <view wx:if="{{!posts.length && !loading}}" class="empty-card"><view class="empty-icon">🌱</view><view class="empty-title">留一条自然小事吧</view><view class="empty-text">纯文字也可以。个人观察需要你主动分享后才会公开。</view></view>
+    <view class="pagination"><button size="mini" bindtap="firstPage">回到最新</button><button wx:if="{{nextCursor}}" size="mini" bindtap="nextPage">下一页</button></view>
+  </block>
+  <block wx:else>
+    <view class="notice">本机记录，尚未公开。原有点赞和评论仍只保存在此设备。</view>
+    <view wx:for="{{localPosts}}" wx:key="id" class="post-card">
+      <view class="username">{{item.speciesName}} · 本机观察</view><view class="post-time">{{item.time}}</view>
+      <image wx:if="{{item.imagePath}}" class="post-image" src="{{item.imagePath}}" mode="aspectFill" />
+      <view class="post-content">{{item.locationName || '观察地点'}} · 模拟识别结果经用户确认</view>
+      <view class="interaction-row"><view data-id="{{item.id}}" data-type="like" bindtap="localInteraction">{{item.liked ? '♥' : '♡'}} {{item.likeCount}}</view><view data-id="{{item.id}}" data-type="seen" bindtap="localInteraction">我也见过 {{item.seenCount}}</view><view data-id="{{item.id}}" data-type="comment" bindtap="localInteraction">本机评论</view></view>
+      <view wx:for="{{item.comments}}" wx:for-item="comment" wx:key="id" class="comment-content">{{comment.username}}：{{comment.content}}</view>
+      <button class="publish" data-id="{{item.id}}" bindtap="shareLocal">补充文字并分享到发现</button>
     </view>
-
-
-    <view
-      class="species-box"
-      data-name="{{item.speciesName}}"
-      bindtap="goToSpeciesDetail"
-    >
-
-      <view>
-
-        <view class="species-name">
-          {{item.speciesName}}
-        </view>
-
-        <view class="scientific-name">
-          {{item.scientificName}}
-        </view>
-
-      </view>
-
-      <view class="species-arrow">
-        ›
-      </view>
-
-    </view>
-
-
-    <view class="meta-row">
-
-      <view>
-        📍 {{item.location}}
-      </view>
-
-      <view>
-        AI {{item.confidence}}%
-      </view>
-
-    </view>
-
-
-    <!-- 社区互动 -->
-    <view class="interaction-row">
-
-      <view
-        class="interaction-item {{item.liked ? 'active' : ''}}"
-        data-id="{{item.id}}"
-        bindtap="toggleLike"
-      >
-        {{item.liked ? '♥' : '♡'}}
-        赞 {{item.likeCount}}
-      </view>
-
-
-      <view
-        class="interaction-item {{item.seen ? 'active' : ''}}"
-        data-id="{{item.id}}"
-        bindtap="toggleSeen"
-      >
-        👀 我也见过 {{item.seenCount}}
-      </view>
-
-
-      <view
-        class="interaction-item"
-        data-id="{{item.id}}"
-        bindtap="addComment"
-      >
-        💬 评论 {{item.commentCount}}
-      </view>
-
-    </view>
-
-
-    <!-- 评论区 -->
-    <view
-      wx:if="{{item.comments.length > 0}}"
-      class="comment-box"
-    >
-
-      <view
-        wx:for="{{item.comments}}"
-        wx:for-item="comment"
-        wx:key="id"
-        class="comment-item"
-      >
-
-        <text class="comment-user">
-          {{comment.username}}：
-        </text>
-
-        <text class="comment-content">
-          {{comment.content}}
-        </text>
-
-      </view>
-
-    </view>
-
-  </view>
-
-</view>
-
-
-<view
-  wx:else
-  class="empty-card"
->
-
-  <view class="empty-icon">
-    🌱
-  </view>
-
-  <view class="empty-title">
-    还没有自然动态
-  </view>
-
-  <view class="empty-text">
-    当你记录第一次自然观察后，它会出现在这里。
-  </view>
-
-</view>
-
+    <view wx:if="{{!localPosts.length}}" class="empty-card">还没有本机观察。可以先在广场聊聊自然。</view>
+  </block>
 </view>

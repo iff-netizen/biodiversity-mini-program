@@ -51,7 +51,7 @@
 
 
     <view class="ai-tag">
-      AI {{observation.confidence}}%
+      模拟识别 · 已由用户确认
     </view>
 
   </view>
@@ -95,7 +95,7 @@
     <view class="info-row">
 
       <text class="info-label">
-        🤖 AI 可信度
+        🤖 模拟识别分数（非鉴定）
       </text>
 
       <text class="info-value">
@@ -184,6 +184,7 @@
 
 
   <!-- 删除 -->
+  <button class="species-button" bindtap="shareObservation">补充文字并分享到发现</button>
   <button
     class="delete-button"
     bindtap="deleteObservation"

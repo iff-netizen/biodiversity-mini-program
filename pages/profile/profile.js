@@ -1,3 +1,4 @@
+const community = require('../../services/community')
 const {
   speciesList,
   getSpeciesByName
@@ -7,6 +8,15 @@ const {
 Page({
 
   data: {
+    communityIdentity: 'A',
+    aiEnabled: true,
+    communityMode: '',
+    communityError: '',
+    devControls: false,
+    debugJobs: [],
+    debugMemories: [],
+    showDiagnostics: false,
+    settingBusy: false,
     observationCount: 0,
     speciesCount: 0,
     contributionCount: 0,
@@ -25,6 +35,46 @@ Page({
 
   onShow() {
     this.loadUserData()
+    this.loadCommunity()
+  },
+
+  async loadCommunity() {
+    const identity = community.identity()
+    try {
+      const user = await community.request('/me')
+      if (identity !== community.identity()) return
+      this.setData({ communityIdentity: community.identity(), aiEnabled: user.aiEnabled, communityMode: user.providerMode, devControls: user.devControls, communityError: '' })
+    } catch (error) { this.setData({ communityError: error.message }) }
+  },
+
+  async changeAi(e) {
+    if (this.data.settingBusy) return
+    const previous = this.data.aiEnabled
+    this.setData({ settingBusy: true })
+    try { const user = await community.request('/me/ai-preferences', 'PUT', { enabled: e.detail.value }); this.setData({ aiEnabled: user.aiEnabled }) }
+    catch (error) { this.setData({ aiEnabled: previous, communityError: error.message }); wx.showToast({ title: '设置未保存，请检查连接', icon: 'none' }) }
+    finally { this.setData({ settingBusy: false }) }
+  },
+
+  switchIdentity() {
+    if (this.data.settingBusy) return
+    wx.showActionSheet({ itemList: ['体验用户 A', '体验用户 B', '体验用户 C'], success: async result => {
+      try { await community.connect(['A', 'B', 'C'][result.tapIndex]); this.setData({ debugJobs: [], debugMemories: [], showDiagnostics: false }); await this.loadCommunity() }
+      catch (error) { wx.showToast({ title: error.message, icon: 'none' }) }
+    } })
+  },
+
+  async diagnostics() {
+    try {
+      const jobs = await community.request('/dev/ai/jobs')
+      const memories = await community.request('/dev/ai/memories')
+      this.setData({ showDiagnostics: true, debugJobs: jobs.jobs.slice(0, 15).map(j => ({ ...j, dueTime: new Date(j.due_at).toLocaleString() })), debugMemories: memories.memories.slice(0, 10) })
+    } catch (error) { this.setData({ communityError: error.message }) }
+  },
+
+  async advanceJobs() {
+    try { await community.request('/dev/ai/control', 'POST', { advanceMs: 60000 }); await this.diagnostics() }
+    catch (error) { wx.showToast({ title: error.message, icon: 'none' }) }
   },
 
 

@@ -2,7 +2,28 @@
   "compileType": "miniprogram",
   "libVersion": "trial",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "value": "server",
+        "type": "folder"
+      },
+      {
+        "value": "docs",
+        "type": "folder"
+      },
+      {
+        "value": ".git",
+        "type": "folder"
+      },
+      {
+        "value": ".gitignore",
+        "type": "file"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -34,6 +55,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx2909b38436d5040a",
+  "appid": "wx82a523063c08ac18",
   "simulatorPluginLibVersion": {}
 }

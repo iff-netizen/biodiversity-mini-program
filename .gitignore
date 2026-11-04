@@ -4,3 +4,14 @@ miniprogram_npm/
 
 # 本地私密配置，不上传 GitHub
 config/config.js
+
+# Local community secrets, persistent user data and evaluation outputs
+server/.env
+server/.env.*
+!server/.env.example
+server/var/
+server/reports/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.log
