@@ -33,9 +33,13 @@ for (const filename of files) {
     if (fs.existsSync(path.join(root, script))) {
       let page
       const js = fs.readFileSync(path.join(root, script), 'utf8')
-      // Evaluate only Page definitions; imported modules replaced by inert stubs.
+      // Evaluate page and component definitions with inert imported modules.
       try {
-        vm.runInNewContext(js, { Page: value => { page = value }, require: () => ({}), wx: { canIUse: () => true }, console })
+        vm.runInNewContext(js, {
+          Page: value => { page = value },
+          Component: value => { page = value.methods },
+          require: () => ({}), wx: { canIUse: () => true }, console
+        })
         for (const handler of source.matchAll(/\b(?:bind|catch)(?::)?[\w-]+=["']([\w]+)["']/g)) {
           if (!page || typeof page[handler[1]] !== 'function') errors.push(filename + ': missing event handler ' + handler[1])
         }
@@ -48,6 +52,9 @@ const packaged = files.filter(file => !ignore.some(rule => rule.type === 'folder
 const prohibited = packaged.filter(f => /^(?:server|docs|\.git)\//.test(f) || /\.(?:sqlite|log)$/.test(f) || /(?:^|\/)\.env/.test(f))
 if (prohibited.length) errors.push('Backend/private files in pack manifest: ' + prohibited.join(','))
 if (!ignore.some(rule => rule.type === 'folder' && rule.value === 'server')) errors.push('server must be excluded as an entire folder')
+for (const required of ['pages/assistant/assistant.wxml', 'components/assistant-fab/assistant-fab.wxml', 'shared/assistant/catalog.js', 'shared/assistant/retrieval.js']) {
+  if (!packaged.includes(required)) errors.push('Assistant file missing from pack manifest: ' + required)
+}
 const report = { node: process.version, checkedFiles: files.length, packagedFiles: packaged.filter(f => !f.startsWith('.')).length, serverExcluded: !packaged.some(f => f.startsWith('server/')), errors,
   boundary: 'Static JS/JSON/WXML/event-handler and packOptions manifest check; not a WeChat compiler/package run.' }
 fs.mkdirSync(path.join(root, 'server/reports'), { recursive: true })

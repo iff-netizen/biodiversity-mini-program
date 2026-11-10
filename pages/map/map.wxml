@@ -1,3 +1,4 @@
+<assistant-fab id="assistant-fab" wx:if="{{showAssistant}}" />
 <view class="container">
 
 
@@ -20,6 +21,7 @@
 <view class="map-card">
 
   <map
+    id="observation-map"
     class="map"
     latitude="{{latitude}}"
     longitude="{{longitude}}"

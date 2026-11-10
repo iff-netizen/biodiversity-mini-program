@@ -1,0 +1,78 @@
+<view class="assistant">
+  <view class="masthead">
+    <view class="avatar" aria-hidden="true"><text>•ᴗ•</text></view>
+    <view class="heading">
+      <view class="name">{{assistantName}} <text class="ai-tag">AI</text></view>
+      <view class="caption">功能向导 · 自然与日常</view>
+    </view>
+    <button class="more" bindtap="more" aria-label="更多聊天选项">•••</button>
+  </view>
+
+  <scroll-view class="timeline" id="timeline" scroll-y scroll-into-view="{{scrollTarget}}" bindscroll="scroll">
+    <view class="content">
+      <view wx:if="{{!turns.length}}" class="welcome">
+        我是{{assistantName}}，可以带你找功能、聊自然，也能陪你随便聊聊。想从哪里开始？
+      </view>
+      <view wx:if="{{refreshKnowledge}}" class="status">服务端的功能指南已更新，更新小程序后可查看最新版离线指南。</view>
+
+      <block wx:for="{{turns}}" wx:key="id" wx:for-item="turn">
+        <view class="user-line"><text class="bubble user-text" user-select>{{turn.content}}</text></view>
+        <view wx:if="{{turn.status === 'success'}}" class="answer bubble">
+          <view class="source">{{turn.sourceLabel}}</view>
+          <text class="answer-text" user-select>{{turn.result.reply}}</text>
+          <view class="row">
+            <button wx:for="{{turn.actions}}" wx:key="id" class="pill nav" data-id="{{item.id}}" bindtap="navigate">{{item.label}} ›</button>
+            <button class="pill copy" data-id="{{turn.id}}" bindtap="copy">复制</button>
+          </view>
+          <view wx:if="{{turn.followUps.length}}" class="row">
+            <button wx:for="{{turn.followUps}}" wx:key="id" class="pill" data-id="{{item.id}}" bindtap="sendFaq" disabled="{{busy}}">{{item.title}}</button>
+          </view>
+        </view>
+        <view wx:elif="{{turn.status === 'pending'}}" class="status row">
+          <text>{{assistantName}}正在想……</text><button class="pill" bindtap="cancelPending">取消</button>
+        </view>
+        <view wx:else class="status row">
+          <text>{{turn.status === 'cancelled' ? '已取消' : turn.error}}</text>
+          <button class="pill" data-id="{{turn.id}}" bindtap="retry" disabled="{{busy}}">重试</button>
+        </view>
+      </block>
+
+      <view class="questions">
+        <view class="questions-header">
+          <button class="pill" bindtap="toggleFaq">{{faqOpen ? '收起常见问题' : '常见问题'}}</button>
+          <button wx:if="{{faqOpen}}" class="pill" bindtap="nextFaq">换一批</button>
+        </view>
+        <block wx:if="{{faqOpen}}">
+          <view wx:for="{{faqGroups}}" wx:key="name" wx:for-item="group" class="question-group">
+            <view class="group-name">{{group.name}}</view>
+            <button wx:for="{{group.items}}" wx:key="id" class="question" data-id="{{item.id}}" bindtap="sendFaq" disabled="{{busy}}">
+              {{item.title}} <text class="arrow">›</text>
+            </button>
+          </view>
+        </block>
+      </view>
+      <view id="timeline-end" class="timeline-end" />
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{newReply}}" class="jump"><button class="pill nav" bindtap="bottom">有新回复 ↓</button></view>
+  <view class="composer {{keyboard ? 'keyboard' : ''}}">
+    <textarea class="draft" value="{{draft}}" bindinput="input" auto-height maxlength="{{maxLength}}"
+      placeholder="问功能、聊自然，或者随便说点什么" adjust-position="{{false}}"
+      bindkeyboardheightchange="keyboardChanged" show-confirm-bar="{{false}}" cursor-spacing="12" />
+    <button class="send" disabled="{{busy || !draft}}" bindtap="sendDraft">发送</button>
+  </view>
+  <view wx:if="{{keyboard}}" style="height: {{keyboard}}px; flex-shrink: 0;" />
+
+  <view wx:if="{{historyOpen}}" class="overlay" bindtap="closeHistory" />
+  <view wx:if="{{historyOpen}}" class="history">
+    <view class="questions-header"><text>最近会话 · {{identity === 'guest' ? '访客' : '体验身份 ' + identity}}</text><button class="pill" bindtap="closeHistory">关闭</button></view>
+    <scroll-view scroll-y class="history-list">
+      <view wx:if="{{!recent.length}}" class="status">这台设备上还没有聊天记录。</view>
+      <button wx:for="{{recent}}" wx:key="id" class="history-item" data-id="{{item.id}}" bindtap="selectHistory">
+        <text>{{item.title}}</text>
+        <text class="caption">{{item.time}}{{item.active ? ' · 当前会话' : ''}}</text>
+      </button>
+    </scroll-view>
+  </view>
+</view>

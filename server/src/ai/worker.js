@@ -7,7 +7,10 @@ const { sourceValid } = require('./memory')
 const { promptVersion } = require('./versions')
 
 class Worker {
-  constructor(community, provider) { this.community = community; this.db = community.db; this.provider = provider; this.busy = false }
+  constructor(community, provider, assistantCalls = () => 0) {
+    this.community = community; this.db = community.db; this.provider = provider; this.busy = false
+    this.assistantCalls = assistantCalls
+  }
   finish(job, status, reason) {
     return this.db.prepare('UPDATE ai_jobs SET status=?,reason_code=?,lease_until=NULL,lease_token=NULL WHERE id=? AND lease_token=?')
       .run(status, reason, job.id, job.lease_token)
@@ -26,7 +29,7 @@ class Worker {
         return { ignored: true }
       }
       const calls = db.prepare('SELECT count(*) AS n FROM provider_calls WHERE created_at>?').get(now - 3600000).n
-      if (calls >= config.maxProviderCallsGlobalPerHour) {
+      if (calls + this.assistantCalls() >= config.maxProviderCallsGlobalPerHour) {
         db.prepare("UPDATE ai_jobs SET status='skipped',reason_code='provider_budget' WHERE id=?").run(job.id)
         return { ignored: true }
       }

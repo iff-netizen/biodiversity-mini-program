@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "自然地图"
+  "navigationBarTitleText": "自然地图",
+  "usingComponents": {
+    "assistant-fab": "/components/assistant-fab/assistant-fab"
+  }
 }

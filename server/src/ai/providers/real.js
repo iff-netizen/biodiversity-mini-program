@@ -12,12 +12,16 @@ class RealProvider {
   }
   status() { return { code: this.billingBlocked ? 'insufficient_balance' : this.verified ? 'ready' : this.key && this.model ? 'configured_unverified' : 'missing_credentials', configured: !!(this.key && this.model), vendor: this.vendor, model: this.model || null } }
   async generateComment(context, { signal } = {}) {
+    return this.complete([
+      { role: 'system', content: systemPrompt }, { role: 'user', content: JSON.stringify({ type: 'untrusted_community_data', ...context }) }
+    ], 800, signal)
+  }
+  generateAssistantReply(messages, { signal } = {}) { return this.complete(messages, 1000, signal) }
+  async complete(messages, maxTokens, signal) {
     if (!this.key || !this.model) throw new Error('missing_credentials')
     if (this.billingBlocked) throw new Error('provider_insufficient_balance')
-    const body = { model: this.model, messages: [
-      { role: 'system', content: systemPrompt }, { role: 'user', content: JSON.stringify({ type: 'untrusted_community_data', ...context }) }
-    ], response_format: { type: 'json_object' }, stream: false,
-    ...(this.vendor === 'deepseek' ? { max_tokens: 800, thinking: { type: 'disabled' } } : { max_completion_tokens: 800 }) }
+    const body = { model: this.model, messages, response_format: { type: 'json_object' }, stream: false,
+      ...(this.vendor === 'deepseek' ? { max_tokens: maxTokens, thinking: { type: 'disabled' } } : { max_completion_tokens: maxTokens }) }
     const response = await this.fetcher(this.baseUrl + '/chat/completions', {
       method: 'POST', signal,
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.key },
@@ -25,8 +29,9 @@ class RealProvider {
     })
     if (response.status === 402) { this.billingBlocked = true; throw new Error('provider_insufficient_balance') }
     if (!response.ok) throw new Error(response.status === 429 ? 'provider_429' : 'provider_http_' + response.status)
-    const data = await response.json()
-    const choice = data.choices?.[0]
+    let data
+    try { data = await response.json() } catch { throw new Error('provider_invalid_json') }
+    const choice = data?.choices?.[0]
     if (choice?.message?.refusal || choice?.finish_reason === 'content_filter') throw new Error('provider_refusal')
     if (choice?.finish_reason === 'length') throw new Error('provider_truncated')
     const output = choice?.message?.content

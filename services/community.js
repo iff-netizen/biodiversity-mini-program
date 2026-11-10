@@ -2,6 +2,7 @@ const config = require('../config/community.example.js')
 let connecting = null
 let sessionVersion = 0
 const sessionKey = 'community.dev.session.v1'
+const identityListeners = new Set()
 function raw(path, method, data, token) {
   return new Promise((resolve, reject) => {
     wx.request({
@@ -21,7 +22,11 @@ async function connect(identity) {
   const version = ++sessionVersion
   const result = await raw('/dev/sessions', 'POST', { identity })
   const session = { ...result, identity }
-  if (version === sessionVersion) wx.setStorageSync(sessionKey, session)
+  if (version === sessionVersion) {
+    const previous = cachedIdentity()
+    wx.setStorageSync(sessionKey, session)
+    if (previous !== identity) identityListeners.forEach(listener => listener(identity))
+  }
   return session
 }
 async function session() {
@@ -35,13 +40,27 @@ async function request(path, method = 'GET', data) {
   try { return await raw(path, method, data, current.token) }
   catch (error) {
     if (error.code === 'unauthorized') {
-      const result = await raw('/dev/sessions', 'POST', { identity: current.identity })
-      const renewed = { ...result, identity: current.identity }
-      if ((wx.getStorageSync(sessionKey) || {}).token === current.token) wx.setStorageSync(sessionKey, renewed)
+      const renewed = await renew(current)
       return raw(path, method, data, renewed.token)
     }
     throw error
   }
+}
+async function renew(current) {
+  const result = await raw('/dev/sessions', 'POST', { identity: current.identity })
+  const renewed = { ...result, identity: current.identity }
+  if ((wx.getStorageSync(sessionKey) || {}).token === current.token) wx.setStorageSync(sessionKey, renewed)
+  return renewed
+}
+function cachedIdentity() {
+  try {
+    const current = wx.getStorageSync(sessionKey)
+    return typeof current?.token === 'string' && ['A', 'B', 'C'].includes(current.identity) ? current.identity : ''
+  } catch { return '' }
+}
+function onIdentityChange(listener) {
+  identityListeners.add(listener)
+  return () => identityListeners.delete(listener)
 }
 function key(prefix) { return prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 12) }
 function identity() { return (wx.getStorageSync(sessionKey) || {}).identity || config.DEFAULT_IDENTITY }
@@ -83,4 +102,4 @@ async function deleteLinkedPosts(observationId) {
   }
   delete links[String(observationId)]; wx.setStorageSync('community.observationLinks.v1', links)
 }
-module.exports = { config, request, session, connect, identity, key, draftKey, shareObservation, linkedPosts, trackShare, hasShares, deleteLinkedPosts }
+module.exports = { config, request, session, connect, renew, identity, cachedIdentity, onIdentityChange, key, draftKey, shareObservation, linkedPosts, trackShare, hasShares, deleteLinkedPosts }

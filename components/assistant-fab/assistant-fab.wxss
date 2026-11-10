@@ -1,0 +1,48 @@
+:host { display: block; width: 0; height: 0; }
+.ball {
+  position: fixed;
+  z-index: 90;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #ffe285;
+  box-shadow: 0 3px 10px rgba(84, 63, 19, .25);
+  color: #523d1d;
+  overflow: hidden;
+}
+.eyes {
+  position: absolute;
+  top: 16px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.eye { width: 4px; height: 6px; background-color: #523d1d; border-radius: 50%; }
+.active .eyes { animation: blink 5s infinite; }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.25); } }
+.smile { position: absolute; top: 20px; left: 21px; font-size: 14px; line-height: 15px; }
+.badge {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  padding: 1px 4px;
+  border-radius: 9px;
+  background-color: #305e47;
+  color: #fff;
+  font-size: 9px;
+  line-height: 12px;
+}
+.tip {
+  position: fixed;
+  z-index: 91;
+  width: 140px;
+  height: 32px;
+  border-radius: 16px;
+  line-height: 32px;
+  text-align: center;
+  color: #305e47;
+  background-color: #fff;
+  font-size: 12px;
+  box-shadow: 0 2px 7px rgba(27, 55, 40, .17);
+}

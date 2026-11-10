@@ -1,3 +1,5 @@
+const assistantStorage = require('../../utils/assistant-storage')
+
 Page({
 
   data: {
@@ -22,6 +24,7 @@ Page({
 
   // 每次进入地图页都重新读取数据
   onShow() {
+    this.setData({ showAssistant: assistantStorage.showFab() })
     this.loadMapData()
   },
 

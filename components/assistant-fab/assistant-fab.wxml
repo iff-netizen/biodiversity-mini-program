@@ -1,0 +1,10 @@
+<cover-view wx:if="{{ready}}" class="ball {{active && !dragging ? 'active' : ''}}"
+  style="left: {{left}}px; top: {{top}}px;" aria-label="打开小黄 AI 助手" aria-role="button"
+  catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd" catchtouchcancel="stopDrag" catchtap="tapBall">
+  <cover-view class="eyes"><cover-view class="eye" /><cover-view class="eye" /></cover-view>
+  <cover-view class="smile">⌣</cover-view>
+  <cover-view class="badge">AI</cover-view>
+</cover-view>
+<cover-view wx:if="{{ready && tip}}" class="tip" style="left: {{tipLeft}}px; top: {{tipTop}}px;" catchtap="dismissTip">
+  不会用？问问我　×
+</cover-view>

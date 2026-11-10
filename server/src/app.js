@@ -6,11 +6,20 @@ const { MockProvider } = require('./ai/providers/mock')
 const { hotTopics } = require('./ai/hotTopics')
 const { refreshMemories } = require('./ai/memory')
 const { seededRandom } = require('./config')
+const { Assistant } = require('./assistant/chat')
+const { limits } = require('../../shared/assistant/catalog')
 
 function loopback(address) { return ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address) }
-async function readBody(req) {
+async function readBody(req, limit = 16384) {
   let size = 0, chunks = []
-  for await (const chunk of req) { size += chunk.length; if (size > 16384) fail(413, 'body_too_large'); chunks.push(chunk) }
+  for await (const chunk of req.iterator({ destroyOnReturn: false })) {
+    size += chunk.length
+    if (size > limit) {
+      req.resume()
+      fail(413, 'body_too_large', '请求内容过长')
+    }
+    chunks.push(chunk)
+  }
   try { return chunks.length ? JSON.parse(Buffer.concat(chunks).toString('utf8')) : {} }
   catch { fail(400, 'invalid_json', '请求必须是 JSON') }
 }
@@ -18,7 +27,13 @@ function createApp(options) {
   const provider = options.provider || new MockProvider()
   const community = new Community({ ...options, providerMode: provider.mode || options.providerMode || 'mock', providerStatus: provider.status ? provider.status() : { code: 'mock_only', configured: false } })
   if (provider.status) Object.defineProperty(community, 'providerStatus', { get: () => provider.status() })
-  const worker = new Worker(community, provider)
+  const communityCalls = () => community.db.prepare('SELECT count(*) AS n FROM provider_calls WHERE created_at>?')
+    .get(community.now() - 3600000).n
+  const assistant = new Assistant({
+    provider, communityCalls, sharedHourlyLimit: community.config.maxProviderCallsGlobalPerHour,
+    config: options.assistant, log: options.assistantLog
+  })
+  const worker = new Worker(community, provider, () => assistant.hourlyCalls())
   const server = http.createServer(async (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     res.setHeader('Cache-Control', 'no-store')
@@ -38,6 +53,17 @@ function createApp(options) {
       }
       const token = req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1]
       const userId = community.authenticate(token)
+      if (route === '/assistant/chat' && method === 'POST') {
+        const controller = new AbortController()
+        const disconnect = () => {
+          if (!res.writableFinished) controller.abort()
+        }
+        res.once('close', disconnect)
+        try {
+          const body = await readBody(req, limits.bodyBytes)
+          return send(await assistant.chat(userId, body, controller.signal))
+        } finally { res.off('close', disconnect) }
+      }
       if (route === '/me' && method === 'GET') return send(community.me(userId))
       if (route === '/posts' && method === 'GET') return send(community.posts(userId, {
         before: url.searchParams.get('before') || '', limit: url.searchParams.get('limit') || 20,
@@ -83,9 +109,9 @@ function createApp(options) {
       const known = error instanceof ApiError
       send({ error: { code: known ? error.code : 'internal_error', message: known ? error.message : '本地服务暂时不可用' } }, known ? error.status : 500)
     }
-    function send(data, status = 200) { if (!res.writableEnded) { res.writeHead(status); res.end(JSON.stringify(data)) } }
+    function send(data, status = 200) { if (!res.destroyed && !res.writableEnded) { res.writeHead(status); res.end(JSON.stringify(data)) } }
   })
   server.requestTimeout = 20000
-  return { server, community, worker, provider }
+  return { server, community, worker, provider, assistant }
 }
 module.exports = { createApp, loopback }

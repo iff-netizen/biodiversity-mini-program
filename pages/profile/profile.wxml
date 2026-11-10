@@ -20,6 +20,15 @@
 
 
 
+<view class="section-card community-settings">
+  <view class="section-title">AI 助手</view>
+  <view class="community-row">
+    <text>显示首页助手</text>
+    <switch checked="{{showAssistant}}" bindchange="changeAssistantFab" color="#2f6b4f" />
+  </view>
+  <button size="mini" bindtap="openAssistant">打开 AI 助手</button>
+</view>
+
 <!-- 数据统计 -->
 <view class="section-card community-settings">
   <view class="section-title">社区互动</view>

@@ -1,4 +1,6 @@
 const community = require('../../services/community')
+const assistantStorage = require('../../utils/assistant-storage')
+const assistantNavigation = require('../../utils/assistant-navigation')
 const {
   speciesList,
   getSpeciesByName
@@ -34,8 +36,19 @@ Page({
 
 
   onShow() {
+    this.setData({ showAssistant: assistantStorage.showFab() })
     this.loadUserData()
     this.loadCommunity()
+  },
+
+  openAssistant() { assistantNavigation.openAssistant('profile') },
+
+  changeAssistantFab(e) {
+    if (assistantStorage.setShowFab(e.detail.value)) this.setData({ showAssistant: e.detail.value })
+    else {
+      this.setData({ showAssistant: assistantStorage.showFab() })
+      wx.showToast({ title: '显示设置未能保存', icon: 'none' })
+    }
   },
 
   async loadCommunity() {
