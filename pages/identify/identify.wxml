@@ -10,7 +10,7 @@
 </view>
 
 <view class="subtitle">
-  拍下你看到的野生动物，让 AI 帮你认识它
+  选一张动物照片，千问视觉模型会给出识别建议
 </view>
 
 
@@ -54,11 +54,17 @@
 <button
   class="identify-button"
   bindtap="identifyAnimal"
+  loading="{{isIdentifying}}"
+  disabled="{{isIdentifying}}"
 >
-  开始识别
+  {{isIdentifying ? '正在识别' : '开始识别'}}
 </button>
 
 
+
+<view wx:if="{{identificationError}}" class="result-card">
+  {{identificationError}}
+</view>
 
 <!-- ========================= -->
 <!-- AI 识别结果 -->
@@ -69,63 +75,32 @@
   class="result-card"
 >
 
-  <view class="new-tag">
-    🤖 AI 识别结果
-  </view>
+  <view class="new-tag">AI 识别建议</view>
+  <view class="selector-title">{{result.label}}</view>
 
-
-  <view class="species-name">
-    {{result.chineseName}}
-  </view>
-
-
-  <view class="scientific-name">
-    {{result.scientificName}}
-  </view>
-
-
-  <view class="confidence">
-    AI 识别可信度：{{result.confidence}}%
-  </view>
-
-
-  <view class="description">
-    {{result.description}}
-  </view>
-
-
-
-  <!-- ========================= -->
-  <!-- 尚未确认 -->
-  <!-- ========================= -->
-
-  <view
-    wx:if="{{!confirmedSpecies && !showSpeciesSelector}}"
-    class="confirm-area"
-  >
-
-    <view class="confirm-title">
-      这个识别结果正确吗？
-    </view>
-
-
+  <view wx:for="{{result.candidates}}" wx:key="id" class="confirm-area">
+    <view class="option-name">{{item.name}}</view>
+    <view class="scientific-name">{{item.scientificName}}</view>
+    <view class="description">照片依据：{{item.evidence}}</view>
     <button
+      wx:if="{{!confirmedSpecies && !showSpeciesSelector}}"
       class="confirm-button"
+      data-name="{{item.name}}"
       bindtap="confirmAIResult"
     >
-      ✓ 是的，这是{{result.chineseName}}
+      选为观察物种
     </button>
-
-
-    <button
-      class="correction-button"
-      bindtap="showCorrectionList"
-    >
-      识别不准确
-    </button>
-
   </view>
 
+  <view wx:if="{{result.tip}}" class="description">{{result.tip}}</view>
+
+  <button
+    wx:if="{{result.status !== 'no_animal' && !confirmedSpecies && !showSpeciesSelector}}"
+    class="correction-button"
+    bindtap="showCorrectionList"
+  >
+    从图鉴手动选择
+  </button>
 
 
   <!-- ========================= -->
@@ -211,7 +186,7 @@
     <!-- 用户纠正过 -->
 
     <view
-      wx:if="{{confirmedSpecies.name != result.chineseName}}"
+      wx:if="{{result.chineseName && confirmedSpecies.name !== result.chineseName}}"
       class="corrected-tip"
     >
       AI 原始识别结果为「{{result.chineseName}}」，
@@ -226,7 +201,7 @@
       wx:else
       class="correct-tip"
     >
-      你已确认 AI 识别结果正确。
+      你已选定本次观察物种。
     </view>
 
 

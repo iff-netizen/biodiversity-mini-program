@@ -98,10 +98,10 @@
 
 
 
-  <view class="info-row">
+  <view wx:if="{{selectedObservation.confidence > 0}}" class="info-row">
 
     <text class="label">
-      🤖 AI 可信度
+      🤖 模拟识别分数（非鉴定）
     </text>
 
     <text>

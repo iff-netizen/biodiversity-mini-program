@@ -9,11 +9,22 @@ const {
 } = require('../../config/config.js')
 
 
+const SPECIES_API = 'http://127.0.0.1:8791/identify'
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024
+const RESULT_LABELS = {
+  identified: '候选物种',
+  uncertain: '暂时无法判断',
+  no_animal: '未看到动物',
+  outside_catalog: '可能是图鉴外动物'
+}
+
 Page({
 
   data: {
 
-    imagePath: "",
+    imagePath: '',
+    isIdentifying: false,
+    identificationError: '',
 
     // AI 原始识别结果
     result: null,
@@ -34,6 +45,7 @@ Page({
   // 1. 选择图片
   // =========================
   chooseImage() {
+    if (this.data.isIdentifying) return
 
     wx.chooseMedia({
 
@@ -56,6 +68,7 @@ Page({
         this.setData({
 
           imagePath: path,
+          identificationError: '',
 
           result: null,
 
@@ -72,86 +85,78 @@ Page({
   },
 
 
-  // =========================
-  // 2. 模拟 AI 识别
-  // =========================
-  identifyAnimal() {
-
-    if (!this.data.imagePath) {
-
-      wx.showToast({
-
-        title: '请先选择图片',
-
-        icon: 'none'
-
-      })
-
+  // 2. 将选中的照片发送给本机识别服务
+  async identifyAnimal() {
+    const { imagePath, isIdentifying } = this.data
+    if (isIdentifying) return
+    if (!imagePath) {
+      wx.showToast({ title: '请先选择图片', icon: 'none' })
       return
-
     }
 
-
-    wx.showLoading({
-
-      title: 'AI识别中'
-
+    this.setData({
+      isIdentifying: true,
+      identificationError: '',
+      result: null,
+      confirmedSpecies: null,
+      showSpeciesSelector: false
     })
 
+    try {
+      const image = await new Promise((resolve, reject) => {
+        wx.getFileSystemManager().readFile({
+          filePath: imagePath,
+          success: ({ data }) => resolve(data),
+          fail: () => reject(new Error('无法读取这张照片，请重新选择'))
+        })
+      })
+      if (image.byteLength > MAX_IMAGE_BYTES) throw new Error('请选择不超过 5 MB 的照片')
 
-    setTimeout(() => {
-
-      wx.hideLoading()
-
-
-      const leopardCat =
-        getSpeciesByName('豹猫')
-
-
-      const result = {
-
-        id:
-          leopardCat
-            ? leopardCat.id
-            : 2,
-
-        chineseName:
-          leopardCat
-            ? leopardCat.name
-            : '豹猫',
-
-        scientificName:
-          leopardCat
-            ? leopardCat.scientificName
-            : 'Prionailurus bengalensis',
-
-        confidence: 96,
-
-        description:
-          '当前为模拟 AI 识别结果。正式版将接入真实物种识别模型。'
-
-      }
-
-
-      this.setData({
-
-        result,
-
-        confirmedSpecies: null,
-
-        showSpeciesSelector: false
-
+      const payload = await new Promise((resolve, reject) => {
+        wx.request({
+          url: SPECIES_API,
+          method: 'POST',
+          header: { 'content-type': 'application/octet-stream' },
+          data: image,
+          timeout: 35000,
+          success: ({ statusCode, data }) => {
+            if (statusCode === 200) resolve(data)
+            else reject(new Error(data?.error || '识别服务暂时无法处理这张照片'))
+          },
+          fail: ({ errMsg }) => {
+            const message = errMsg?.includes('timeout')
+              ? '识别请求超时，请重试'
+              : '无法连接本地识别服务，请确认服务已经启动'
+            reject(new Error(message))
+          }
+        })
       })
 
-    }, 1000)
-
+      const label = RESULT_LABELS[payload?.status]
+      if (!label || !Array.isArray(payload.candidates)) throw new Error('识别服务返回了无法读取的结果')
+      const first = payload.candidates[0]
+      this.setData({
+        result: {
+          status: payload.status,
+          label,
+          candidates: payload.candidates,
+          chineseName: first?.name || '',
+          scientificName: first?.scientificName || '',
+          tip: payload.status === 'identified' ? '' : payload.tip
+        }
+      })
+    } catch (error) {
+      this.setData({ identificationError: error.message })
+    } finally {
+      this.setData({ isIdentifying: false })
+    }
   },
 
 
   // =========================
   // 3. 用户确认 AI 正确
   // =========================
-  confirmAIResult() {
+  confirmAIResult(event) {
 
     const result =
       this.data.result
@@ -164,7 +169,7 @@ Page({
 
     const species =
       getSpeciesByName(
-        result.chineseName
+        event?.currentTarget?.dataset?.name || result.chineseName
       )
 
 
@@ -689,8 +694,8 @@ Page({
             // =========================
 
             const corrected =
-              result.chineseName !==
-              confirmedSpecies.name
+              !!result.chineseName &&
+              result.chineseName !== confirmedSpecies.name
 
 
             // =========================
@@ -808,13 +813,15 @@ Page({
               aiScientificName:
                 result.scientificName,
 
-              aiConfidence:
-                result.confidence,
+              aiStatus:
+                result.status,
 
+              aiCandidates:
+                result.candidates.map(({ id, evidence }) => ({ id, evidence })),
 
-              // 兼容现有页面
-              confidence:
-                result.confidence,
+              // 大模型未提供经校准的置信度。
+              aiConfidence: null,
+              confidence: null,
 
 
               // 是否经过人工纠正

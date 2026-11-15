@@ -92,7 +92,7 @@
     </view>
 
 
-    <view class="info-row">
+    <view wx:if="{{observation.confidence > 0}}" class="info-row">
 
       <text class="info-label">
         🤖 模拟识别分数（非鉴定）
