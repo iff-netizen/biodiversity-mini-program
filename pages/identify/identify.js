@@ -12,7 +12,7 @@ const {
 const SPECIES_API = 'http://127.0.0.1:8791/identify'
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const RESULT_LABELS = {
-  identified: '候选物种',
+  identified: '首选建议',
   uncertain: '暂时无法判断',
   no_animal: '未看到动物',
   outside_catalog: '可能是图鉴外动物'
@@ -25,6 +25,7 @@ Page({
     imagePath: '',
     isIdentifying: false,
     identificationError: '',
+    showAlternativeCandidates: false,
 
     // AI 原始识别结果
     result: null,
@@ -69,6 +70,7 @@ Page({
 
           imagePath: path,
           identificationError: '',
+          showAlternativeCandidates: false,
 
           result: null,
 
@@ -97,6 +99,7 @@ Page({
     this.setData({
       isIdentifying: true,
       identificationError: '',
+      showAlternativeCandidates: false,
       result: null,
       confirmedSpecies: null,
       showSpeciesSelector: false
@@ -153,6 +156,13 @@ Page({
   },
 
 
+  toggleAlternativeCandidates() {
+    const { result, showAlternativeCandidates } = this.data
+    if (result && result.candidates.length > 1) {
+      this.setData({ showAlternativeCandidates: !showAlternativeCandidates })
+    }
+  },
+
   // =========================
   // 3. 用户确认 AI 正确
   // =========================
@@ -192,7 +202,8 @@ Page({
 
       confirmedSpecies: species,
 
-      showSpeciesSelector: false
+      showSpeciesSelector: false,
+      showAlternativeCandidates: false
 
     })
 
@@ -221,6 +232,7 @@ Page({
     this.setData({
 
       showSpeciesSelector: true,
+      showAlternativeCandidates: false,
 
       confirmedSpecies: null
 
@@ -261,7 +273,8 @@ Page({
 
       confirmedSpecies: species,
 
-      showSpeciesSelector: false
+      showSpeciesSelector: false,
+      showAlternativeCandidates: false
 
     })
 

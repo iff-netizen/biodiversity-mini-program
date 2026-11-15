@@ -78,19 +78,29 @@
   <view class="new-tag">AI 识别建议</view>
   <view class="selector-title">{{result.label}}</view>
 
-  <view wx:for="{{result.candidates}}" wx:key="id" class="confirm-area">
-    <view class="option-name">{{item.name}}</view>
-    <view class="scientific-name">{{item.scientificName}}</view>
-    <view class="description">照片依据：{{item.evidence}}</view>
+  <block wx:for="{{result.candidates}}" wx:key="id">
+    <view wx:if="{{index === 0 || showAlternativeCandidates}}" class="confirm-area">
+      <view class="option-name">{{item.name}}{{index > 0 ? '（备选）' : ''}}</view>
+      <view class="scientific-name">{{item.scientificName}}</view>
+      <view class="description">照片依据：{{item.evidence}}</view>
+      <button
+        wx:if="{{!confirmedSpecies && !showSpeciesSelector}}"
+        class="{{index === 0 ? 'confirm-button' : 'correction-button'}}"
+        data-name="{{item.name}}"
+        bindtap="confirmAIResult"
+      >
+        选为观察物种
+      </button>
+    </view>
+
     <button
-      wx:if="{{!confirmedSpecies && !showSpeciesSelector}}"
-      class="confirm-button"
-      data-name="{{item.name}}"
-      bindtap="confirmAIResult"
+      wx:if="{{index === 0 && result.candidates.length > 1 && !confirmedSpecies && !showSpeciesSelector}}"
+      class="correction-button"
+      bindtap="toggleAlternativeCandidates"
     >
-      选为观察物种
+      {{showAlternativeCandidates ? '收起其他可能' : '查看其他可能'}}
     </button>
-  </view>
+  </block>
 
   <view wx:if="{{result.tip}}" class="description">{{result.tip}}</view>
 
